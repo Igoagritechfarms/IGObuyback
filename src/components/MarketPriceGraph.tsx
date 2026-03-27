@@ -63,6 +63,7 @@ export const MarketPriceGraph = () => {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [lastUpdated, setLastUpdated] = useState<string>('');
   const cardRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const cardsContainerRef = useRef<HTMLDivElement | null>(null);
   const selectedVegetable = vegetableKeys[carouselIndex];
 
   useEffect(() => {
@@ -87,6 +88,21 @@ export const MarketPriceGraph = () => {
 
   useEffect(() => {
     const activeCard = cardRefs.current[carouselIndex];
+    const container = cardsContainerRef.current;
+
+    if (activeCard && container) {
+      const cardLeft = activeCard.offsetLeft;
+      const cardWidth = activeCard.offsetWidth;
+      const containerWidth = container.offsetWidth;
+      const targetScroll = cardLeft - (containerWidth - cardWidth) / 2;
+
+      container.scrollTo({
+        left: Math.max(0, targetScroll),
+        behavior: 'smooth',
+      });
+      return;
+    }
+
     if (activeCard) {
       activeCard.scrollIntoView({
         behavior: 'smooth',
@@ -109,7 +125,7 @@ export const MarketPriceGraph = () => {
       </div>
 
       <div className="rounded-2xl border border-agri-earth-200 bg-agri-earth-50 p-3">
-        <div className="flex gap-3 overflow-x-auto pb-1">
+        <div ref={cardsContainerRef} className="flex gap-3 overflow-x-auto pb-1">
           {vegetableKeys.map((vegKey, index) => {
             const vegetable = VEGETABLE_SERIES[vegKey];
             const isActive = selectedVegetable === vegKey;

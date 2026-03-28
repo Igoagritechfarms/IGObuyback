@@ -16,6 +16,7 @@ export const Navbar = () => {
   const navLinks = [
     { label: t('nav_home'), to: '/' },
     { label: t('nav_market'), to: '/market' },
+    { label: '🎁 Earn Rewards', to: '/referrals' },
     { label: 'Enroll (Mandi)', to: '/enroll' },
     { label: t('nav_contact'), to: '/contact' },
   ];
@@ -74,6 +75,9 @@ export const Navbar = () => {
         {/* Right side */}
         <div className="hidden md:flex items-center gap-3">
           <LanguageToggle />
+          <Link to="/settings" className="px-3 py-2 rounded-xl text-sm font-medium text-agri-earth-600 hover:text-agri-green-700 hover:bg-agri-green-50 transition-colors">
+            ⚙️ Settings
+          </Link>
           <Link to="/sell" className="btn-secondary py-2 px-4 text-sm">{t('nav_sell')}</Link>
           <Link to="/enroll" className="btn-primary py-2 px-4 text-sm">Join Mandi</Link>
         </div>

@@ -6,6 +6,7 @@ import { MarketSection } from '../components/sections/MarketSection';
 import { FormsSection } from '../components/sections/FormsSection';
 import { LogisticsSection } from '../components/sections/LogisticsSection';
 import { TestimonialsSection } from '../components/sections/TestimonialsSection';
+import { PriceComparisonWidget } from '../components/PriceComparisonWidget';
 import { CTASection } from '../components/sections/CTASection';
 
 /**
@@ -22,6 +23,11 @@ export const Home = () => (
     <FormsSection />
     <LogisticsSection />
     <TestimonialsSection />
+    <div className="py-24 px-6 bg-gradient-to-b from-white to-agri-earth-50">
+      <div className="max-w-4xl mx-auto">
+        <PriceComparisonWidget />
+      </div>
+    </div>
     <CTASection />
   </>
 );

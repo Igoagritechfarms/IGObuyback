@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Calculator, TrendingUp, Package } from 'lucide-react';
+import { Calculator, Package } from 'lucide-react';
 import { PRODUCTS } from '../config/products';
 
 export const PriceCalculator = () => {
@@ -78,14 +78,6 @@ export const PriceCalculator = () => {
               Calculate
             </button>
           </div>
-        </div>
-
-        {/* Current Rate Info */}
-        <div className="flex items-center gap-2 px-3 py-2 bg-agri-green-50 rounded-xl">
-          <TrendingUp size={14} className="text-agri-green-600" />
-          <span className="text-xs text-agri-green-700 font-medium">
-            Current IGO buyback rate: <strong>₹{product.basePrice}/{product.unit}</strong>
-          </span>
         </div>
 
         {/* Result */}

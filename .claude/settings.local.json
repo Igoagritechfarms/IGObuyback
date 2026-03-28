@@ -6,7 +6,17 @@
       "Bash(xargs grep:*)",
       "Bash(npm run:*)",
       "Bash(git commit:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(grep -E \"\\\\.tsx$\")",
+      "Bash(xargs basename:*)",
+      "Bash(/tmp/phase2_summary.md:*)",
+      "Read(//tmp/**)",
+      "Bash(/tmp/product_enhancement.md:*)",
+      "Read(//c/Users/Admin/Desktop/IGObuyback/**)",
+      "Bash(__NEW_LINE_3422feb026e97fca__ cat:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(/tmp/phase0_summary.txt:*)",
+      "Bash(find src/components src/pages src/hooks src/config -type f -name *.ts* -newer /tmp/phase0_summary.txt)"
     ]
   }
 }

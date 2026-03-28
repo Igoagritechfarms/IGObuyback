@@ -8,12 +8,16 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { MarketTicker } from './components/MarketTicker';
 import { WhatsAppButton } from './components/WhatsAppButton';
+import { LiveChat } from './components/LiveChat';
 import { Home } from './pages/Home';
 import { Market } from './pages/Market';
+import { ProductCatalog } from './pages/ProductCatalog';
 import { SellPage } from './pages/SellPage';
 import { BuyPage } from './pages/BuyPage';
 import { Enroll } from './pages/Enroll';
 import { Contact } from './pages/Contact';
+import { Referrals } from './pages/Referrals';
+import { Settings } from './pages/Settings';
 
 const PageWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -38,16 +42,20 @@ const AppRoutes = () => {
           <Routes location={location}>
           <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
           <Route path="/market" element={<PageWrapper><Market /></PageWrapper>} />
+          <Route path="/catalog" element={<PageWrapper><ProductCatalog /></PageWrapper>} />
           <Route path="/sell" element={<PageWrapper><SellPage /></PageWrapper>} />
           <Route path="/buy" element={<PageWrapper><BuyPage /></PageWrapper>} />
           <Route path="/enroll" element={<PageWrapper><Enroll /></PageWrapper>} />
           <Route path="/contact" element={<PageWrapper><Contact /></PageWrapper>} />
+          <Route path="/referrals" element={<PageWrapper><Referrals /></PageWrapper>} />
+          <Route path="/settings" element={<PageWrapper><Settings /></PageWrapper>} />
           <Route path="*" element={<PageWrapper><Home /></PageWrapper>} />
         </Routes>
       </AnimatePresence>
       </div>
       <Footer />
       <WhatsAppButton />
+      <LiveChat />
     </>
   );
 };

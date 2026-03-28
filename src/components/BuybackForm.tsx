@@ -2,7 +2,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { User, Phone, MapPin, Package, Calendar, Truck, CheckCircle2, MessageSquare, TrendingUp, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { useBuybackForm } from '../hooks/useBuybackForm';
-import { PRODUCTS } from '../config/products';
+import { PRODUCTS, Product } from '../config/products';
+import ProductPicker from './ProductPicker';
 
 interface FormProps {
   type: 'buy' | 'sell';
@@ -15,6 +16,7 @@ interface FormProps {
  */
 export const BuybackForm = ({ type }: FormProps) => {
   const [step, setStep] = useState(1);
+  const [showProductPicker, setShowProductPicker] = useState(false);
   const { formData, setFieldValue, errors, isSubmitting, submitError, handleSubmit, otpSent, handleSendOtp, handleResendOtp, otpCountdown } =
     useBuybackForm(type);
 
@@ -39,6 +41,15 @@ export const BuybackForm = ({ type }: FormProps) => {
   const resetForm = () => {
     setStep(1);
   };
+
+  const handleSelectProduct = (product: Product) => {
+    setFieldValue('product', product.id);
+    setShowProductPicker(false);
+  };
+
+  const selectedProduct = formData.product
+    ? PRODUCTS.find((p) => p.id === formData.product)
+    : null;
 
   const renderInput = (
     field: keyof typeof formData,
@@ -184,20 +195,30 @@ export const BuybackForm = ({ type }: FormProps) => {
                   <label className="text-sm font-semibold flex items-center gap-2">
                     <Package size={16} className="text-agri-green-600" /> Product Name
                   </label>
-                  <select
-                    value={formData['product'] as string}
-                    onChange={(e) => setFieldValue('product', e.target.value)}
-                    className={`w-full p-3 rounded-xl border transition-all focus:ring-2 focus:ring-agri-green-600 outline-none bg-white ${
-                      errors.product ? 'border-red-500 bg-red-50' : 'border-agri-earth-200'
+                  <button
+                    type="button"
+                    onClick={() => setShowProductPicker(true)}
+                    className={`w-full p-3 rounded-xl border-2 transition-all text-left font-medium ${
+                      errors.product
+                        ? 'border-red-500 bg-red-50 text-red-700'
+                        : selectedProduct
+                          ? 'border-agri-green-500 bg-agri-green-50 text-agri-green-900'
+                          : 'border-agri-earth-200 text-gray-500 hover:border-agri-green-400'
                     }`}
                   >
-                    <option value="">Select Product</option>
-                    {PRODUCTS.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name} (₹{p.basePrice}/{p.unit})
-                      </option>
-                    ))}
-                  </select>
+                    {selectedProduct ? (
+                      <div className="flex items-center justify-between">
+                        <span>
+                          {selectedProduct.emoji} {selectedProduct.name}
+                        </span>
+                        <span className="text-sm font-semibold text-agri-green-600">
+                          ₹{selectedProduct.basePrice}/{selectedProduct.unit}
+                        </span>
+                      </div>
+                    ) : (
+                      'Click to select product...'
+                    )}
+                  </button>
                   {errors.product && (
                     <p className="text-xs text-red-600 flex items-center gap-1">
                       <AlertCircle size={12} /> {errors.product}
@@ -296,6 +317,14 @@ export const BuybackForm = ({ type }: FormProps) => {
           )}
         </AnimatePresence>
       </form>
+
+      {/* Product Picker Modal */}
+      <ProductPicker
+        isOpen={showProductPicker}
+        onClose={() => setShowProductPicker(false)}
+        onSelectProduct={handleSelectProduct}
+        selectedProductId={formData.product as string}
+      />
     </div>
   );
 };

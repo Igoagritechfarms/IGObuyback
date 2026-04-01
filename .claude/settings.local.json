@@ -16,7 +16,11 @@
       "Bash(__NEW_LINE_3422feb026e97fca__ cat:*)",
       "mcp__Claude_Preview__preview_start",
       "Bash(/tmp/phase0_summary.txt:*)",
-      "Bash(find src/components src/pages src/hooks src/config -type f -name *.ts* -newer /tmp/phase0_summary.txt)"
+      "Bash(find src/components src/pages src/hooks src/config -type f -name *.ts* -newer /tmp/phase0_summary.txt)",
+      "Bash(vercel --version)",
+      "Bash(vercel whoami:*)",
+      "Bash(vercel --prod)",
+      "Bash(vercel --prod --name igobuyback)"
     ]
   }
 }

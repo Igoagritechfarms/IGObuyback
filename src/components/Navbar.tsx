@@ -56,10 +56,10 @@ export const Navbar = () => {
             {/* Brand name — always visible */}
             <div>
               <div className="text-lg font-black tracking-tight leading-none text-gray-900">
-                IGO<span className="text-green-600">Farmgate Mandi</span>
+                IGO <span className="text-green-600">Farmgatemandi</span>
               </div>
               <div className="text-[9px] font-bold leading-none uppercase tracking-[0.15em] text-gray-400 mt-0.5">
-                Agricultural Marketplace
+                Powered by IGO Group
               </div>
             </div>
           </Link>

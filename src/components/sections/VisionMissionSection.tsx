@@ -1,127 +1,190 @@
 import { motion } from 'motion/react';
-import { Eye, Target, Shield, TrendingUp, Users, Leaf } from 'lucide-react';
+import {
+  Eye, Target, Leaf, Warehouse, PackageCheck,
+  HandCoins, Truck, Star, ArrowRight,
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-const PILLARS = [
+/* ─── Card data ─── */
+const CARDS = [
   {
-    icon: Shield,
-    color: 'bg-green-600',
-    title: '0 Middlemen',
-    body: 'We cut every layer of commission between the farmer and the buyer — what buyers pay is what farmers receive.',
+    id: 'vision',
+    Icon: Eye,
+    emoji: '🌐',
+    gradient: 'from-green-700 via-emerald-700 to-green-900',
+    accentColor: '#15803d',
+    lightBg: '#f0fdf4',
+    borderColor: '#86efac',
+    badge: 'Our Vision',
+    headline: "India's Most Trusted Farm Buyback Ecosystem",
+    body: "We're building India's most transparent farm buyback network — connecting farmers, warehouses, and markets with fair pricing, reliable logistics, and direct payments. Zero middlemen. Always.",
+    highlights: [
+      { Icon: Warehouse,    label: 'Warehouse-to-market flow' },
+      { Icon: PackageCheck, label: 'Transparent quality checks' },
+      { Icon: Star,         label: 'India-wide farmer trust' },
+    ],
+    cta: { label: 'Learn more', to: '/about' },
   },
   {
-    icon: TrendingUp,
-    color: 'bg-lime-600',
-    title: 'On-Time Payment',
-    body: 'Guaranteed payment within 7 working days of quality-approved delivery. 85% of farmers are paid within 5 days.',
-  },
-  {
-    icon: Leaf,
-    color: 'bg-emerald-600',
-    title: 'Strict Quality Checks',
-    body: 'Grade A & B certified produce only. Our quality network ensures buyers receive consistent, premium Indian farm output.',
-  },
-  {
-    icon: Users,
-    color: 'bg-teal-600',
-    title: 'India-wide Reach',
-    body: 'From small farms in Tamil Nadu to FPO collectives across India — every farmer deserves fair market access.',
+    id: 'mission',
+    Icon: Target,
+    emoji: '🎯',
+    gradient: 'from-gray-900 via-gray-800 to-gray-950',
+    accentColor: '#4d7c0f', // lime-700
+    lightBg: '#f7fee7',
+    borderColor: '#bef264',
+    badge: 'Our Mission',
+    headline: 'Simplify Produce Selling for Every Indian Farmer',
+    body: "From farm-gate quality checks to direct bank transfers, we make the selling journey effortless. Fair pricing. Smart pickup logistics. Secure payments — within 7 working days, every time.",
+    highlights: [
+      { Icon: HandCoins, label: 'Secure, on-time payment' },
+      { Icon: Truck,     label: 'Farm-gate pickup' },
+      { Icon: Leaf,      label: 'Farmer-first always' },
+    ],
+    cta: { label: 'How it works', to: '/#how-it-works' },
   },
 ];
 
-export const VisionMissionSection = () => (
-  <section className="py-24 bg-white relative overflow-hidden" id="vision-mission">
-    {/* Subtle background pattern */}
-    <div className="absolute inset-0 pointer-events-none">
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-50 rounded-full -translate-y-1/2 translate-x-1/3 opacity-60" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-lime-50 rounded-full translate-y-1/3 -translate-x-1/4 opacity-50" />
+/* ─── Individual Card ─── */
+const Card = ({ card, i }: { card: (typeof CARDS)[0]; i: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 24 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.55, delay: i * 0.1 }}
+    className="flex flex-col rounded-3xl overflow-hidden border shadow-md hover:shadow-xl transition-shadow duration-300"
+    style={{ borderColor: card.borderColor }}
+  >
+    {/* Gradient header */}
+    <div className={`bg-gradient-to-br ${card.gradient} px-7 py-6 relative overflow-hidden`}>
+      {/* Subtle grid texture */}
+      <svg
+        aria-hidden
+        className="absolute inset-0 w-full h-full opacity-10"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <pattern id={`grid-${card.id}`} width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" strokeDasharray="3 5" />
+            <circle cx="0" cy="0" r="1.2" fill="white" opacity="0.45" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill={`url(#grid-${card.id})`} />
+      </svg>
+      {/* Decorative blobs */}
+      <div className="absolute -right-10 -top-10 w-36 h-36 bg-white/5 rounded-full pointer-events-none" />
+      <div className="absolute -left-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full pointer-events-none" />
+
+      <div className="relative z-10 flex items-start gap-4">
+        {/* Emoji icon */}
+        <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center text-2xl shrink-0 select-none">
+          {card.emoji}
+        </div>
+        <div>
+          <span className="text-[9px] font-black uppercase tracking-[0.22em] text-white/60 block mb-1">
+            {card.badge}
+          </span>
+          <h3 className="text-xl font-black text-white leading-snug tracking-tight">
+            {card.headline}
+          </h3>
+        </div>
+      </div>
     </div>
 
-    <div className="relative max-w-7xl mx-auto px-6">
+    {/* Body */}
+    <div
+      className="flex flex-col flex-1 px-7 py-6 gap-5"
+      style={{ backgroundColor: card.lightBg }}
+    >
+      <p className="text-sm text-gray-600 leading-relaxed font-medium">
+        {card.body}
+      </p>
 
-      {/* ── Vision / Mission side-by-side ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
-
-        {/* Vision */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-br from-green-700 to-green-900 rounded-3xl p-10 text-white relative overflow-hidden"
-        >
-          <div className="absolute -top-8 -right-8 w-40 h-40 bg-white/5 rounded-full" />
-          <div className="absolute -bottom-6 -left-6 w-28 h-28 bg-white/5 rounded-full" />
-
-          <div className="relative">
-            <div className="w-14 h-14 bg-white/15 rounded-2xl flex items-center justify-center mb-6">
-              <Eye size={26} className="text-lime-300" />
+      {/* Highlights */}
+      <div className="flex flex-col gap-2">
+        {card.highlights.map(({ Icon, label }) => (
+          <div
+            key={label}
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-white border"
+            style={{ borderColor: card.borderColor }}
+          >
+            <div
+              className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0"
+              style={{ backgroundColor: card.accentColor + '15' }}
+            >
+              <Icon size={12} style={{ color: card.accentColor }} />
             </div>
-            <div className="text-xs font-black uppercase tracking-[0.2em] text-lime-400 mb-3">Our Vision</div>
-            <h3 className="text-2xl md:text-3xl font-black leading-tight mb-4">
-              Eliminate the middleman from Indian agriculture — forever.
-            </h3>
-            <p className="text-green-200 leading-relaxed text-base">
-              We envision an India where every farmer, regardless of size or geography, has direct access to top-tier national buyers — with transparent prices, zero commission, and dignity in trade.
-            </p>
+            <span className="text-xs font-semibold text-gray-700">{label}</span>
           </div>
-        </motion.div>
-
-        {/* Mission */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-10 text-white relative overflow-hidden"
-        >
-          <div className="absolute -top-8 -left-8 w-40 h-40 bg-lime-500/5 rounded-full" />
-          <div className="absolute -bottom-6 -right-6 w-28 h-28 bg-lime-500/5 rounded-full" />
-
-          <div className="relative">
-            <div className="w-14 h-14 bg-lime-500/15 rounded-2xl flex items-center justify-center mb-6">
-              <Target size={26} className="text-lime-400" />
-            </div>
-            <div className="text-xs font-black uppercase tracking-[0.2em] text-lime-400 mb-3">Our Mission</div>
-            <h3 className="text-2xl md:text-3xl font-black leading-tight mb-4">
-              Guaranteed buyback. On-time payment. For every Indian farmer.
-            </h3>
-            <p className="text-gray-300 leading-relaxed text-base">
-              Through IGOBuyback, we provide a guaranteed market, strict quality grading, and 7-day payment assurance — building a sustainable agricultural supply chain from farm gate to India's top buyers.
-            </p>
-          </div>
-        </motion.div>
+        ))}
       </div>
 
-      {/* ── 4 Pillars ── */}
+      {/* CTA */}
+      <Link
+        to={card.cta.to}
+        className="mt-auto inline-flex items-center gap-2 text-sm font-bold transition-colors"
+        style={{ color: card.accentColor }}
+      >
+        {card.cta.label}
+        <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+      </Link>
+    </div>
+  </motion.div>
+);
+
+/* ─── Section ─── */
+export const VisionMissionSection = () => (
+  <section id="vision-mission" className="py-16 bg-white">
+    <div className="max-w-5xl mx-auto px-6">
+
+      {/* Header */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: -10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         className="text-center mb-10"
       >
-        <p className="text-xs font-black uppercase tracking-[0.2em] text-green-600 mb-2">Our Commitments</p>
-        <h2 className="text-3xl md:text-4xl font-black text-gray-900">
-          Built on <span className="text-green-600">Four Promises</span>
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 bg-green-50 border border-green-200 rounded-full text-green-700 text-[10px] font-black uppercase tracking-widest">
+          <Leaf size={11} />
+          Who We Are
+        </div>
+        <h2 className="text-3xl md:text-4xl font-black tracking-tight text-gray-900">
+          Our <span className="text-green-600">Vision</span> &amp;{' '}
+          <span className="text-green-600">Mission</span>
         </h2>
       </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {PILLARS.map((p, i) => (
-          <motion.div
-            key={p.title}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            whileHover={{ y: -6 }}
-            className="bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:border-green-200 hover:shadow-lg transition-all duration-300"
-          >
-            <div className={`w-12 h-12 ${p.color} rounded-xl flex items-center justify-center mb-4 shadow-sm`}>
-              <p.icon size={22} className="text-white" />
-            </div>
-            <h4 className="text-lg font-black text-gray-900 mb-2">{p.title}</h4>
-            <p className="text-sm text-gray-500 leading-relaxed">{p.body}</p>
-          </motion.div>
+      {/* Two-column side-by-side cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {CARDS.map((card, i) => (
+          <Card key={card.id} card={card} i={i} />
         ))}
       </div>
+
+      {/* Stats strip */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.25 }}
+        className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3"
+      >
+        {[
+          { val: '1,200+', label: 'Registered Farmers' },
+          { val: '₹4.5 Cr+', label: 'Farmer Payouts' },
+          { val: '26',     label: 'Produce Verticals' },
+          { val: '7 Days', label: 'Payment Guarantee' },
+        ].map((s) => (
+          <motion.div
+            key={s.label}
+            whileHover={{ y: -2 }}
+            className="bg-green-50 border border-green-100 rounded-2xl p-3 text-center hover:border-green-300 transition-all duration-200"
+          >
+            <div className="text-xl font-black text-green-700 mb-0.5">{s.val}</div>
+            <div className="text-[11px] font-semibold text-gray-500">{s.label}</div>
+          </motion.div>
+        ))}
+      </motion.div>
     </div>
   </section>
 );

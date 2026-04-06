@@ -6,9 +6,9 @@ import {
 } from 'lucide-react';
 
 /**
- * Hero Section — SMO Direction
- * "You Farm. We Buy. You Profit."
- * 0 Middlemen · On-time Payment · Strict Quality Checks · India-wide
+ * Hero Section — IGO Farmgatemandi
+ * "Sell Your Farm Produce with Assured Buyback"
+ * Assured Buyback · Best Market Price · Fast Quality Verification · Easy Farm Pickup · Trusted Buyer Network
  */
 export const HeroSection = () => (
   <section className="relative min-h-screen flex items-center pt-16 overflow-hidden bg-gradient-to-br from-green-800 via-green-700 to-green-600">
@@ -29,15 +29,15 @@ export const HeroSection = () => (
       />
     </div>
 
-    <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+    <div className="relative z-10 max-w-7xl mx-auto px-6 py-12 w-full">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
         {/* ── Left Content ── */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="space-y-8"
+          className="space-y-7"
         >
           {/* Trust Badge */}
           <motion.div
@@ -47,7 +47,7 @@ export const HeroSection = () => (
             className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur border border-white/20 rounded-full text-white text-sm font-semibold"
           >
             <ShieldCheck size={15} className="text-lime-300" />
-            Trusted by 1,200+ Farmers · India-wide
+            Trusted by 1,200+ Farmers Across India
             <motion.div
               animate={{ scale: [1, 1.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
@@ -63,14 +63,14 @@ export const HeroSection = () => (
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-5xl md:text-6xl xl:text-7xl font-black text-white leading-[0.95] tracking-tighter"
             >
-              You Farm.{' '}
+              Sell Your Farm Produce{' '}
               <motion.span
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.45 }}
                 className="text-lime-300"
               >
-                We Buy.
+                with Assured
               </motion.span>
               <br />
               <motion.span
@@ -79,7 +79,7 @@ export const HeroSection = () => (
                 transition={{ duration: 0.6, delay: 0.6 }}
                 className="text-white"
               >
-                You Profit.
+                Buyback
               </motion.span>
             </motion.h1>
 
@@ -89,7 +89,7 @@ export const HeroSection = () => (
               transition={{ duration: 0.8, delay: 0.35 }}
               className="text-lg text-green-100 max-w-xl leading-relaxed font-medium"
             >
-              0 middlemen. On-time payment. Transparent pricing — direct from your farm gate to India's top buyers.
+              IGO Farmgatemandi connects farmers directly with verified buyers for secure pricing, easy pickup support, and reliable buyback opportunities across India.
             </motion.p>
           </div>
 
@@ -102,10 +102,10 @@ export const HeroSection = () => (
           >
             {[
               { icon: <BadgeCheck size={14} />, label: '0 Middlemen' },
-              { icon: <Clock size={14} />, label: 'On-time Payment' },
-              { icon: <CheckCircle2 size={14} />, label: 'Strict Quality Checks' },
-              { icon: <Award size={14} />, label: '7-Day Guarantee' },
-              { icon: <Globe size={14} />, label: 'India-wide' },
+              { icon: <TrendingUp size={14} />, label: 'Best Market Price' },
+              { icon: <CheckCircle2 size={14} />, label: 'Fast Quality Verification' },
+              { icon: <Clock size={14} />, label: 'Easy Farm Pickup' },
+              { icon: <Users size={14} />, label: 'Trusted Buyer Network' },
             ].map((pill, i) => (
               <motion.div
                 key={pill.label}
@@ -127,9 +127,9 @@ export const HeroSection = () => (
             transition={{ duration: 0.5, delay: 0.55 }}
             className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4"
           >
-            <p className="text-sm font-bold text-lime-300 mb-1.5">26 Product Verticals Covered</p>
+            <p className="text-sm font-bold text-lime-300 mb-1.5">26+ Product Categories Covered</p>
             <p className="text-green-100 text-sm">
-              Vegetables · Fruits · Microgreens · Spices · Dry Fruits · Honey & more — season-wise buyback updates
+              Vegetables · Fruits · Microgreens · Spices · Dry Fruits · Honey · More
             </p>
           </motion.div>
 
@@ -165,7 +165,7 @@ export const HeroSection = () => (
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="flex items-center gap-5 pt-2"
+            className="flex items-center gap-5"
           >
             <div className="flex -space-x-2">
               {['🌾', '🥕', '🍅', '🌱', '🍎'].map((emoji, i) => (
@@ -187,12 +187,12 @@ export const HeroSection = () => (
                 ))}
                 <span className="text-white font-bold text-sm ml-1">4.9/5</span>
               </div>
-              <p className="text-green-200 text-xs font-medium">800+ verified farmer reviews · India-wide</p>
+              <p className="text-green-200 text-xs font-medium">800+ verified farmer reviews across India</p>
             </div>
           </motion.div>
         </motion.div>
 
-        {/* ── Right Side — Stats & Process ── */}
+        {/* ── Right Side — Stats Glance Card ── */}
         <motion.div
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
@@ -207,14 +207,14 @@ export const HeroSection = () => (
           >
             <h3 className="text-lg font-black text-white mb-5 flex items-center gap-2">
               <Award size={20} className="text-lime-300" />
-              IGOBuyback at a Glance
+              IGO Farmgatemandi at a Glance
             </h3>
             <div className="grid grid-cols-2 gap-4">
               {[
                 { value: '₹4.5 Cr', label: 'Paid Out to Farmers', icon: <TrendingUp size={16} /> },
                 { value: '1,200+', label: 'Active Farmers', icon: <Users size={16} /> },
-                { value: '24/7', label: 'Dedicated Support', icon: <Globe size={16} /> },
-                { value: '7 Days', label: 'On-time Payment', icon: <Clock size={16} /> },
+                { value: '24/7', label: 'Buyback Assistance', icon: <Globe size={16} /> },
+                { value: '12+', label: 'States Covered', icon: <Clock size={16} /> },
               ].map((stat, i) => (
                 <motion.div
                   key={i}
@@ -232,55 +232,37 @@ export const HeroSection = () => (
             </div>
           </motion.div>
 
-          {/* Simple process preview */}
-          <div className="bg-white/8 backdrop-blur border border-white/15 rounded-3xl p-6">
+          {/* Trustmarks */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-white/8 backdrop-blur border border-white/15 rounded-3xl p-6"
+          >
             <p className="text-sm font-bold text-white mb-4 flex items-center gap-2">
-              <Leaf size={15} className="text-lime-300" /> Simple 4-Step Process
+              <Leaf size={15} className="text-lime-300" /> Why Farmers Choose Us
             </p>
-            {[
-              { step: '1', text: 'Register your farm — get unique Farmer ID', icon: '📝' },
-              { step: '2', text: 'List harvest — receive guaranteed price quote', icon: '💰' },
-              { step: '3', text: 'Strict quality check — grade A / B certified', icon: '✅' },
-              { step: '4', text: 'On-time payment to your bank in 7 working days', icon: '🏦' },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 + i * 0.1 }}
-                className="flex items-center gap-3 py-2 group"
-              >
-                <div className="w-6 h-6 rounded-full bg-lime-400 text-green-900 text-xs font-black flex items-center justify-center shrink-0">
-                  {item.step}
-                </div>
-                <span className="text-sm text-green-100 font-medium">{item.icon} {item.text}</span>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Categories */}
-          <div className="bg-white/8 backdrop-blur border border-white/15 rounded-3xl p-5">
-            <p className="text-xs font-bold text-green-200 mb-3 uppercase tracking-wider">We Buy From Your Farm</p>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="space-y-3">
               {[
-                { emoji: '🥬', label: 'Vegetables' },
-                { emoji: '🍎', label: 'Fruits' },
-                { emoji: '🌱', label: 'Microgreens' },
-                { emoji: '🧄', label: 'Spices' },
-                { emoji: '🥜', label: 'Dry Fruits' },
-                { emoji: '🍯', label: 'Honey' },
-              ].map((cat, i) => (
+                { emoji: '🤝', text: 'Assured buyback support for selected produce' },
+                { emoji: '📈', text: 'Best price guidance based on live demand' },
+                { emoji: '✅', text: 'Quick quality check and approval process' },
+                { emoji: '🚛', text: 'Pickup coordination from farm location' },
+                { emoji: '🌐', text: 'Trusted IGO network across India' },
+              ].map((item, i) => (
                 <motion.div
                   key={i}
-                  whileHover={{ scale: 1.06, y: -2 }}
-                  className="text-center p-2.5 rounded-xl bg-white/10 border border-white/15 hover:bg-white/15 transition-all cursor-default"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.65 + i * 0.08 }}
+                  className="flex items-center gap-3"
                 >
-                  <p className="text-xl mb-1">{cat.emoji}</p>
-                  <p className="text-xs font-semibold text-green-100">{cat.label}</p>
+                  <span className="text-lg">{item.emoji}</span>
+                  <span className="text-sm text-green-100 font-medium">{item.text}</span>
                 </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
     </div>

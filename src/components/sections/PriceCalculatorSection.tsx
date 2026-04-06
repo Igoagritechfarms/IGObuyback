@@ -1,258 +1,286 @@
-import { useState, useEffect } from 'react';
-import { Calculator, TrendingUp, Package, AlertCircle } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import {
+  TrendingUp,
+  AlertTriangle,
+  CheckCircle2,
+  BarChart2,
+  Calendar,
+  ArrowUpRight,
+} from 'lucide-react';
 
-interface PriceCalculation {
-  basePrice: number;
-  qualityBonus: number;
-  quantityBonus: number;
-  totalPrice: number;
-  pricePerKg: number;
+/* ─────────────────────────────────────────────
+   Product comparison data
+───────────────────────────────────────────── */
+interface ProductData {
+  emoji: string;
+  label: string;
+  market: number;   // APMC / direct market price
+  middleman: number; // what middlemen give
+  igo: number;       // IGO guaranteed price
+  unit: string;
+  harvests: number;  // estimated harvests per year
+  qtyPerHarvest: number; // kg per harvest
 }
 
+const PRODUCTS: Record<string, ProductData> = {
+  tomato: {
+    emoji: '🍅',
+    label: 'Tomato',
+    market: 18,
+    middleman: 14,
+    igo: 28,
+    unit: 'kg',
+    harvests: 4,
+    qtyPerHarvest: 500,
+  },
+  onion: {
+    emoji: '🧅',
+    label: 'Onion',
+    market: 22,
+    middleman: 17,
+    igo: 35,
+    unit: 'kg',
+    harvests: 2,
+    qtyPerHarvest: 800,
+  },
+  carrot: {
+    emoji: '🥕',
+    label: 'Carrot',
+    market: 28,
+    middleman: 21,
+    igo: 38,
+    unit: 'kg',
+    harvests: 3,
+    qtyPerHarvest: 400,
+  },
+  mushroom: {
+    emoji: '🍄',
+    label: 'Mushroom',
+    market: 120,
+    middleman: 90,
+    igo: 198,
+    unit: 'kg',
+    harvests: 6,
+    qtyPerHarvest: 100,
+  },
+  lettuce: {
+    emoji: '🥬',
+    label: 'Lettuce',
+    market: 20,
+    middleman: 14,
+    igo: 30,
+    unit: 'kg',
+    harvests: 5,
+    qtyPerHarvest: 300,
+  },
+};
+
+const PRODUCT_KEYS = Object.keys(PRODUCTS) as (keyof typeof PRODUCTS)[];
+
+const fmt = (n: number) =>
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(n);
+
+/* ─────────────────────────────────────────────
+   Component
+───────────────────────────────────────────── */
 export const PriceCalculatorSection = () => {
-  const [product, setProduct] = useState('tomato');
-  const [quantity, setQuantity] = useState(1000);
-  const [quality, setQuality] = useState('A');
-  
-  // Product base prices (per kg)
-  const basePrices: Record<string, number> = {
-    tomato: 25,
-    potato: 20,
-    onion: 30,
-    chili: 45,
-    brinjal: 35,
-    cauliflower: 25,
-    cabbage: 15,
-    carrot: 40,
-    beans: 50,
-    gourds: 20
-  };
+  const [selected, setSelected] = useState<string>('tomato');
+  // Always defined because selected starts as 'tomato' and only updates from PRODUCT_KEYS
+  const data = PRODUCTS[selected] as ProductData;
 
-  // Quality multipliers
-  const qualityMultipliers: Record<string, number> = {
-    'A++': 1.15,
-    'A+': 1.10,
-    'A': 1.00,
-    'B': 0.90,
-    'C': 0.80
-  };
-
-  // Quantity bonuses
-  const getQuantityBonus = (qty: number): number => {
-    if (qty >= 5000) return 0.05;
-    if (qty >= 3000) return 0.03;
-    if (qty >= 1000) return 0.02;
-    return 0;
-  };
-
-  const [calculation, setCalculation] = useState<PriceCalculation>({
-    basePrice: 0,
-    qualityBonus: 0,
-    quantityBonus: 0,
-    totalPrice: 0,
-    pricePerKg: 0
-  });
-
-  useEffect(() => {
-    const basePrice = basePrices[product] ?? 0;
-    const base = basePrice * quantity;
-    const qualityMultiplier = qualityMultipliers[quality] ?? 1;
-    const qualityBonusAmt = base * (qualityMultiplier - 1);
-    const quantityBonusAmt = base * getQuantityBonus(quantity);
-    const total = base + qualityBonusAmt + quantityBonusAmt;
-    
-    setCalculation({
-      basePrice: base,
-      qualityBonus: qualityBonusAmt,
-      quantityBonus: quantityBonusAmt,
-      totalPrice: total,
-      pricePerKg: total / quantity
-    });
-  }, [product, quantity, quality]);
-
-  const formatPrice = (price: number): string => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0
-    }).format(price);
-  };
+  /* derived */
+  const gainVsMiddleman = (((data.igo - data.middleman) / data.middleman) * 100).toFixed(1);
+  const gainVsMarket    = (((data.igo - data.market) / data.market) * 100).toFixed(1);
+  const yearlyQty       = data.harvests * data.qtyPerHarvest;
+  const yearlyIGO       = yearlyQty * data.igo;
+  const yearlyMiddle    = yearlyQty * data.middleman;
+  const yearlyGain      = yearlyIGO - yearlyMiddle;
 
   return (
-    <section className="py-20 bg-gradient-to-br from-green-50 via-white to-lime-50 overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-20 w-64 h-64 bg-green-200/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-lime-200/20 rounded-full blur-3xl" />
+    <section className="relative py-20 overflow-hidden bg-gradient-to-br from-green-50 via-white to-emerald-50">
+      {/* soft radial blobs */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-green-200/25 rounded-full blur-3xl" />
+        <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-emerald-200/25 rounded-full blur-3xl" />
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            <Calculator size={16} />
-            Smart Pricing Tool
+      <div className="relative max-w-5xl mx-auto px-6">
+
+        {/* ── Header ── */}
+        <div className="flex items-start gap-4 mb-10">
+          <div className="w-12 h-12 bg-green-700 rounded-2xl flex items-center justify-center shrink-0 shadow-md">
+            <BarChart2 className="text-white" size={22} />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Farm Price Calculator
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Get instant price estimates for your produce. Our transparent pricing ensures you get the best value for your quality crops.
-          </p>
+          <div>
+            <h2 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
+              Price Comparison Tool
+            </h2>
+            <p className="text-gray-500 text-sm mt-0.5">
+              See how much more you earn with IGO
+            </p>
+          </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Calculator Form */}
-          <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-              <Package size={24} className="text-green-600" />
-              Calculate Your Price
-            </h3>
+        {/* ── Outer container ── */}
+        <div className="bg-white/80 backdrop-blur-sm border border-green-100 rounded-3xl shadow-xl p-6 md:p-8 space-y-8">
 
-            {/* Product Selection */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Select Product
-              </label>
-              <select
-                value={product}
-                onChange={(e) => setProduct(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none transition-colors text-gray-900"
-              >
-                {Object.entries(basePrices).map(([name, price]) => (
-                  <option key={name} value={name}>
-                    {name.charAt(0).toUpperCase() + name.slice(1)} - ₹{price}/kg (base price)
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Quantity Input */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Quantity (kg)
-              </label>
-              <input
-                type="number"
-                value={quantity}
-                onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 0))}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none transition-colors text-gray-900"
-                min="1"
-                step="100"
-              />
-              <p className="text-xs text-gray-500 mt-2">
-                {quantity >= 5000 && "🎉 Bulk discount applied (5%)"}
-                {quantity >= 3000 && quantity < 5000 && "✨ Volume discount applied (3%)"}
-                {quantity >= 1000 && quantity < 3000 && "📈 Standard discount applied (2%)"}
-                {quantity < 1000 && "No minimum quantity required"}
-              </p>
-            </div>
-
-            {/* Quality Selection */}
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
-                Quality Grade
-              </label>
-              <div className="grid grid-cols-5 gap-2">
-                {Object.keys(qualityMultipliers).map((grade) => (
-                  <button
-                    key={grade}
-                    onClick={() => setQuality(grade)}
-                    className={`px-3 py-2 rounded-lg font-medium transition-all ${
-                      quality === grade
-                        ? 'bg-green-600 text-white border-2 border-green-600'
-                        : 'bg-gray-100 text-gray-700 border-2 border-gray-200 hover:border-green-300'
-                    }`}
-                  >
-                    {grade}
-                  </button>
-                ))}
-              </div>
-              <p className="text-xs text-gray-500 mt-2">
-                {quality === 'A++' && "⭐ Premium quality - 15% bonus"}
-                {quality === 'A+' && "🌟 Excellent quality - 10% bonus"}
-                {quality === 'A' && "✅ Good quality - Standard price"}
-                {quality === 'B' && "⚠️ Fair quality - 10% adjustment"}
-                {quality === 'C' && "📉 Basic quality - 20% adjustment"}
-              </p>
-            </div>
+          {/* ── Product Selector Tabs ── */}
+          <div className="flex flex-wrap gap-2">
+            {PRODUCT_KEYS.map((key) => {
+              const p = PRODUCTS[key] as ProductData;
+              const isActive = key === selected;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setSelected(key)}
+                  className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold border-2 transition-all duration-200 ${
+                    isActive
+                      ? 'bg-green-700 text-white border-green-700 shadow-md'
+                      : 'bg-white text-gray-700 border-gray-200 hover:border-green-300 hover:text-green-700'
+                  }`}
+                >
+                  <span>{p.emoji}</span>
+                  {p.label}
+                </button>
+              );
+            })}
           </div>
 
-          {/* Price Breakdown */}
-          <div className="space-y-6">
-            {/* Price Display Card */}
-            <div className="bg-gradient-to-br from-green-600 to-green-700 rounded-3xl shadow-xl p-8 text-white">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold">Estimated Price</h3>
-                <TrendingUp size={28} className="text-green-200" />
-              </div>
-              
-              <div className="text-center mb-6">
-                <div className="text-5xl font-bold mb-2">
-                  {formatPrice(calculation.totalPrice)}
+          {/* ── Comparison Cards ── */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selected}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-4"
+            >
+              {/* 1 – Market Price */}
+              <div className="rounded-2xl border-2 border-gray-200 bg-white p-5 flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-widest text-gray-400">
+                    Market Price
+                  </span>
+                  <div className="w-8 h-8 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <TrendingUp size={16} className="text-gray-500" />
+                  </div>
                 </div>
-                <div className="text-green-100 text-lg">
-                  {formatPrice(calculation.pricePerKg)} per kg
+                <div className="text-3xl font-black text-gray-800">
+                  ₹{data.market}
+                  <span className="text-base font-semibold text-gray-400">/{data.unit}</span>
+                </div>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  What you'd get direct from APMC
+                </p>
+              </div>
+
+              {/* 2 – Middleman Price */}
+              <div className="rounded-2xl border-2 border-red-200 bg-red-50 p-5 flex flex-col gap-3 relative overflow-hidden">
+                <span className="absolute top-3 right-3 text-[10px] font-black uppercase tracking-wider text-red-600 bg-red-100 px-2.5 py-1 rounded-full">
+                  Typical Middleman
+                </span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-widest text-red-400">
+                    Middleman Price
+                  </span>
+                  <div className="w-8 h-8 bg-red-100 rounded-xl flex items-center justify-center">
+                    <AlertTriangle size={16} className="text-red-500" />
+                  </div>
+                </div>
+                <div className="text-3xl font-black text-red-700">
+                  ₹{data.middleman}
+                  <span className="text-base font-semibold text-red-400">/{data.unit}</span>
+                </div>
+                <p className="text-xs text-red-500 leading-relaxed">
+                  Lost to middlemen — you deserve better
+                </p>
+              </div>
+
+              {/* 3 – IGO Fair Price */}
+              <div className="rounded-2xl border-2 border-green-500 bg-green-700 p-5 flex flex-col gap-3 relative overflow-hidden shadow-lg">
+                <span className="absolute top-3 right-3 text-[10px] font-black uppercase tracking-wider text-green-700 bg-green-100 px-2.5 py-1 rounded-full">
+                  Best Result ✓
+                </span>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black uppercase tracking-widest text-green-200">
+                    IGO Fair Price
+                  </span>
+                  <div className="w-8 h-8 bg-green-600 rounded-xl flex items-center justify-center">
+                    <CheckCircle2 size={16} className="text-white" />
+                  </div>
+                </div>
+                <div className="text-3xl font-black text-white">
+                  ₹{data.igo}
+                  <span className="text-base font-semibold text-green-300">/{data.unit}</span>
+                </div>
+                <p className="text-xs text-green-200 leading-relaxed">
+                  What you get with IGO — guaranteed
+                </p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* ── Summary Row ── */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`summary-${selected}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
+              {/* More than Middleman */}
+              <div className="flex items-center gap-4 bg-green-50 border border-green-200 rounded-2xl px-5 py-4">
+                <div className="w-12 h-12 bg-green-700 rounded-2xl flex items-center justify-center shrink-0">
+                  <ArrowUpRight className="text-white" size={22} />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-widest mb-0.5">
+                    More than Middleman
+                  </p>
+                  <p className="text-2xl font-black text-green-700">
+                    +{gainVsMiddleman}%
+                    <span className="text-sm font-semibold text-gray-500 ml-1">extra per {data.unit}</span>
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    vs market: <span className="font-bold text-green-600">+{gainVsMarket}%</span>
+                  </p>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="bg-white/10 rounded-xl p-3">
-                  <div className="text-green-200 mb-1">Base Amount</div>
-                  <div className="font-semibold">{formatPrice(calculation.basePrice)}</div>
+              {/* Yearly Estimate */}
+              <div className="flex items-center gap-4 bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4">
+                <div className="w-12 h-12 bg-emerald-700 rounded-2xl flex items-center justify-center shrink-0">
+                  <Calendar className="text-white" size={22} />
                 </div>
-                <div className="bg-white/10 rounded-xl p-3">
-                  <div className="text-green-200 mb-1">Total Bonus</div>
-                  <div className="font-semibold text-green-200">
-                    +{formatPrice(calculation.qualityBonus + calculation.quantityBonus)}
-                  </div>
+                <div>
+                  <p className="text-xs text-gray-500 font-semibold uppercase tracking-widest mb-0.5">
+                    Yearly Estimate
+                  </p>
+                  <p className="text-2xl font-black text-emerald-700">
+                    {fmt(yearlyIGO)}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Extra vs middlemen: <span className="font-bold text-emerald-600">+{fmt(yearlyGain)}</span>
+                  </p>
                 </div>
               </div>
-            </div>
+            </motion.div>
+          </AnimatePresence>
 
-            {/* Detailed Breakdown */}
-            <div className="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Price Breakdown</h3>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Base Price ({quantity} kg × ₹{basePrices[product]}/kg)</span>
-                  <span className="font-semibold text-gray-900">{formatPrice(calculation.basePrice)}</span>
-                </div>
-                
-                {calculation.qualityBonus !== 0 && (
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600">Quality Bonus ({quality} grade)</span>
-                    <span className="font-semibold text-green-600">
-                      {calculation.qualityBonus > 0 ? '+' : ''}{formatPrice(calculation.qualityBonus)}
-                    </span>
-                  </div>
-                )}
-                
-                {calculation.quantityBonus !== 0 && (
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="text-gray-600">Volume Bonus</span>
-                    <span className="font-semibold text-green-600">
-                      +{formatPrice(calculation.quantityBonus)}
-                    </span>
-                  </div>
-                )}
-                
-                <div className="flex justify-between items-center py-3">
-                  <span className="text-lg font-bold text-gray-900">Total Price</span>
-                  <span className="text-xl font-bold text-green-600">{formatPrice(calculation.totalPrice)}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Info Card */}
-            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
-              <AlertCircle size={20} className="text-blue-600 mt-0.5 shrink-0" />
-              <div className="text-sm text-blue-800">
-                <strong>Note:</strong> These are estimated prices. Final prices are determined after quality inspection at our collection centers. Prices are updated daily based on market conditions.
-              </div>
-            </div>
-          </div>
+          {/* Disclaimer */}
+          <p className="text-xs text-gray-400 text-center">
+            * Estimates based on{' '}
+            <span className="font-semibold">{data.harvests} harvests × {data.qtyPerHarvest} {data.unit} per year</span>.
+            Actual prices may vary by quality, season, and location.
+          </p>
         </div>
       </div>
     </section>
